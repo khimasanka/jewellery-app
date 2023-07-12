@@ -3,7 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import {RxDashboard} from 'react-icons/rx';
-import {GrCart} from 'react-icons/gr';
+import {GiPearlNecklace} from 'react-icons/gi';
 import {MdPeople} from 'react-icons/md';
 import {RiBarChart2Fill} from 'react-icons/ri';
 
@@ -17,9 +17,9 @@ export const mainListItems = (
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <GrCart />
+        <GiPearlNecklace />
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <ListItemText primary="Items" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>

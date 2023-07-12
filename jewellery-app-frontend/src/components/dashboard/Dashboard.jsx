@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {FiMenu,FiChevronLeft,FiBell} from 'react-icons/fi';
 import { mainListItems } from './listItems/ListItems.jsx';
+import {Outlet} from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -142,8 +143,9 @@ export default function Dashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
+            <Outlet/>
+            {/*<Grid container spacing={3}>
+               Chart
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
                   sx={{
@@ -153,10 +155,10 @@ export default function Dashboard() {
                     height: 240,
                   }}
                 >
-               {/*   <Chart />*/}
+                  <Chart />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
+               Recent Deposits
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                   sx={{
@@ -166,16 +168,16 @@ export default function Dashboard() {
                     height: 240,
                   }}
                 >
-               {/*   <Deposits />*/}
+                  <Deposits />
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
+               Recent Orders
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                {/*  <Orders />*/}
+                  <Orders />
                 </Paper>
               </Grid>
-            </Grid>
+            </Grid>*/}
           </Container>
         </Box>
       </Box>
