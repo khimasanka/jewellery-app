@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {FiMenu,FiChevronLeft,FiBell} from 'react-icons/fi';
-import { mainListItems } from './listItems/ListItems.jsx';
+import { mainListItems } from './list/ListItems.jsx';
 import {Outlet} from "react-router-dom";
 
 const drawerWidth = 240;
