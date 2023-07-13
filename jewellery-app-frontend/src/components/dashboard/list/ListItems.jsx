@@ -6,16 +6,17 @@ import {RxDashboard} from 'react-icons/rx';
 import {GiPearlNecklace} from 'react-icons/gi';
 import {MdPeople} from 'react-icons/md';
 import {RiBarChart2Fill} from 'react-icons/ri';
+import { Link } from 'react-router-dom';
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/dashboard">
       <ListItemIcon>
         <RxDashboard />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/dashboard/items">
       <ListItemIcon>
         <GiPearlNecklace />
       </ListItemIcon>
