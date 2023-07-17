@@ -12,6 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
+import AddCustomer from "./AddCustomer/AddCustomer.jsx";
 
 const Customers = () => {
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
@@ -35,7 +36,7 @@ const Customers = () => {
         open={openAddCustomer}
         // onClick={()=>setOpenAddItem(false)}
       >
-        <AddItem onClose={() => setOpenAddCustomer(false)}/>
+        <AddCustomer onClose={() => setOpenAddCustomer(false)}/>
       </Backdrop>
 
       <Grid item xs={12} md={8} lg={9}>
