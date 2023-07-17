@@ -50,7 +50,6 @@ const Items = () =>{
             display: 'flex',
             gap:10
           }}>
-            <Button variant="outlined" size="small">View Items</Button>
             <Button size="small" variant="contained" color="success" endIcon={<BiPlusCircle/>} onClick={()=>setOpenAddItem(true)}>Add Item</Button>
           </div>
 

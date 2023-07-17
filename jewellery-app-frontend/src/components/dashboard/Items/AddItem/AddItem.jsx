@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import {GrClose} from "react-icons/gr";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import {Autocomplete} from "@mui/material";
+import {Autocomplete, InputAdornment} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useState} from "react";
 import Button from "@mui/material/Button";
@@ -40,6 +40,8 @@ const AddItem = (props) => {
 
   const [inputNameValue, setInputNameValue] = useState('');
   const [itemName, setItemName] = useState(itemNames[0]);
+  const [inputMaterialValue, setInputMaterialValue] = useState('');
+  const [material, setMaterial] = useState(materials[0]);
 
   return (
     <Box className="Container" width={720} m={1}>
@@ -76,48 +78,47 @@ const AddItem = (props) => {
             <Autocomplete
               size={"small"}
               freeSolo
-              value={itemName}
+              value={material}
               onChange={(event, newValue) => {
-                setItemName(newValue);
+                setMaterial(newValue);
               }}
-              inputValue={inputNameValue}
+              inputValue={inputMaterialValue}
               onInputChange={(event, newInputValue) => {
-                setInputNameValue(newInputValue);
+                setInputMaterialValue(newInputValue);
               }}
               options={materials.map((option) => option)}
               renderInput={(params) => <TextField {...params} label="Material" />}
             />
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
-            <Autocomplete
-              freeSolo
+            <TextField
               size={"small"}
-              value={itemName}
-              onChange={(event, newValue) => {
-                setItemName(newValue);
+              freeSolo
+              id="outlined-start-adornment"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">Weight</InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">mg</InputAdornment>
+                ),
               }}
-              inputValue={inputNameValue}
-              onInputChange={(event, newInputValue) => {
-                setInputNameValue(newInputValue);
-              }}
-              options={itemNames.map((option) => option)}
-              renderInput={(params) => <TextField {...params} label="Weight" />}
+              fullWidth
             />
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
-            <Autocomplete
+            <TextField
               size={"small"}
               freeSolo
-              value={itemName}
-              onChange={(event, newValue) => {
-                setItemName(newValue);
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">Price</InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">rs</InputAdornment>
+                ),
               }}
-              inputValue={inputNameValue}
-              onInputChange={(event, newInputValue) => {
-                setInputNameValue(newInputValue);
-              }}
-              options={materials.map((option) => option)}
-              renderInput={(params) => <TextField {...params} label="Price" />}
+              fullWidth
             />
           </Grid>
 
