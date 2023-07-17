@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import {Autocomplete} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useState} from "react";
+import Button from "@mui/material/Button";
 
 const AddItem = (props) => {
   const itemNames = [
@@ -41,7 +42,7 @@ const AddItem = (props) => {
   const [itemName, setItemName] = useState(itemNames[0]);
 
   return (
-    <Box className="Container" width={720}>
+    <Box className="Container" width={720} m={1}>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={11}>
           <Typography align="center" color="black" variant="h6" gutterBottom>
@@ -87,6 +88,50 @@ const AddItem = (props) => {
               renderInput={(params) => <TextField {...params} label="Material" />}
             />
           </Grid>
+          <Grid item lg={6} md={6} xs={12}>
+            <Autocomplete
+              freeSolo
+              size={"small"}
+              value={itemName}
+              onChange={(event, newValue) => {
+                setItemName(newValue);
+              }}
+              inputValue={inputNameValue}
+              onInputChange={(event, newInputValue) => {
+                setInputNameValue(newInputValue);
+              }}
+              options={itemNames.map((option) => option)}
+              renderInput={(params) => <TextField {...params} label="Weight" />}
+            />
+          </Grid>
+          <Grid item lg={6} md={6} xs={12}>
+            <Autocomplete
+              size={"small"}
+              freeSolo
+              value={itemName}
+              onChange={(event, newValue) => {
+                setItemName(newValue);
+              }}
+              inputValue={inputNameValue}
+              onInputChange={(event, newInputValue) => {
+                setInputNameValue(newInputValue);
+              }}
+              options={materials.map((option) => option)}
+              renderInput={(params) => <TextField {...params} label="Price" />}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Grid container spacing={2} justifyContent="space-between">
+              <Grid item>
+                <Button color="secondary" variant="outlined">Clear</Button>
+              </Grid>
+              <Grid item>
+                <Button color="secondary" variant="contained">Add Item</Button>
+              </Grid>
+            </Grid>
+          </Grid>
+
         </Grid>
       </Container>
     </Box>
