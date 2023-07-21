@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const customer = require('./routes/customer');
 const items = require('./routes/items');
@@ -7,6 +8,7 @@ const user = require('./routes/user');
 
 const app = express();
 const port = 4000;
+app.use(cors());
 
 const url = 'mongodb://127.0.0.1/jewelleryshop';
 
