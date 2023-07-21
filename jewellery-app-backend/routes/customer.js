@@ -1,8 +1,66 @@
 const express = require('express');
+const app = express();
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('customer get');
+const Customer = require('../models/customer.models');
+
+app.use(express.json());
+
+router.get('/', async (req, res) => {
+  try {
+    const customer = await Customer.find();
+    res.json(customer);
+  }catch (err) {
+    console.log(err)
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.id);
+    res.json(customer);
+  }catch (err) {
+    console.log(err)
+  }
+})
+
+router.post('/', async (req, res) => {
+  const customer = new Customer({
+    code: req.body.code,
+    name: req.body.name,
+    telephone: req.body.telephone,
+    address: req.body.address,
+  });
+
+  try {
+    const responce = await customer.save();
+    res.json(responce)
+  } catch (e) {
+    console.log('error ' + e)
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  try {
+    const customer = await Customer.findByIdAndUpdate(req.params.id, {
+      code: req.body.code,
+      name: req.body.name,
+      telephone: req.body.telephone,
+      address: req.body.address,
+    });
+    res.json(customer);
+  } catch (e) {
+    console.log('error ' + e)
+  }
+})
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const customer = await Customer.findByIdAndDelete(req.params.id);
+    res.json(customer);
+  } catch (e) {
+    console.log('error ' + e)
+  }
 });
 
 module.exports = router;

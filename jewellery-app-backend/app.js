@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const customer = require('./routes/customer');
 const items = require('./routes/items');
+const user = require('./routes/user');
 
 const app = express();
 const port = 4000;
@@ -19,9 +20,13 @@ con.on("open", () => {
 app.use(express.json());
 app.use('/customer', customer);
 app.use('/items', items);
+app.use('/', user);
 
 app.get('/', (req, res) => {
-  console.log(req.body.code);
+  res.send('Hello World!')
+});
+
+app.post('/', (req, res) => {
   res.send('Hello World!')
 });
 
