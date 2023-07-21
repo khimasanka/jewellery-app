@@ -9,9 +9,9 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import {FiMenu,FiChevronLeft,FiBell} from 'react-icons/fi';
+import {FiMenu,FiChevronLeft} from 'react-icons/fi';
+import {BiLogOut} from 'react-icons/bi';
 import { mainListItems } from './list/ListItems.jsx';
 import {Outlet} from "react-router-dom";
 
@@ -82,6 +82,11 @@ export default function Dashboard() {
     };
   }, []);
 
+  const logout = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -115,10 +120,8 @@ export default function Dashboard() {
             >
               Dashboard
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <FiBell />
-              </Badge>
+            <IconButton color="inherit" onClick={logout}>
+              <BiLogOut/>
             </IconButton>
           </Toolbar>
         </AppBar>
