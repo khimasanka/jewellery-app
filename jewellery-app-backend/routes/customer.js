@@ -26,10 +26,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const customer = new Customer({
-    code: req.body.code,
     name: req.body.name,
     telephone: req.body.telephone,
     address: req.body.address,
+    gender: req.body.gender,
   });
 
   try {
@@ -43,10 +43,10 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const customer = await Customer.findByIdAndUpdate(req.params.id, {
-      code: req.body.code,
       name: req.body.name,
       telephone: req.body.telephone,
       address: req.body.address,
+      gender: req.body.gender,
     });
     res.json(customer);
   } catch (e) {
