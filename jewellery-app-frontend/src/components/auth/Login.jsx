@@ -9,17 +9,33 @@ import {FcLock} from 'react-icons/fc';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {login} from "../../services/auth.js";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (token) {
+      window.location.href = '/dashboard';
+    }
+  }, [token]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    try {
+      const token = await login(data.get('username'), data.get('password'));
+      localStorage.setItem('token', token.token);
+      navigate('/dashboard');
+    }catch (e) {
+      console.log(e)
+    }
   };
 
   return (
@@ -45,10 +61,10 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
