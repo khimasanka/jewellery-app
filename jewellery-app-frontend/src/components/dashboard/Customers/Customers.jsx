@@ -1,6 +1,5 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Backdrop, InputBase} from "@mui/material";
-import AddItem from "../Items/AddItem/AddItem.jsx";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
@@ -13,30 +12,52 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import AddCustomer from "./AddCustomer/AddCustomer.jsx";
+import {getAllUsers} from "../../../services/customer.js";
 
 const Customers = () => {
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
+  const [customer, setCustomer] = useState([]);
 
   const createData = (name, calories, fat, carbs, protein) => {
     return {name, calories, fat, carbs, protein};
   };
 
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
+  const [rows, setRows] = useState([]);
+
+  useEffect( () => {
+    const getCustomers = async () => {
+      const customers = await getAllUsers();
+      const mappedRows = customers.data.map((customer) =>
+        createData(
+          customer.name,
+          customer.telephone,
+          customer.address,
+          customer.gender,
+          <Button
+            variant="contained"
+            size={"small"}
+            onClick={() => {
+              setCustomer(customer);
+              setOpenAddCustomer(true);
+            }}
+          >
+            View
+          <
+         /Button>
+        ));
+      setRows(mappedRows);
+    }
+    getCustomers();
+  }, []);
+
 
   return (
     <div>
       <Backdrop
         sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
         open={openAddCustomer}
-        // onClick={()=>setOpenAddItem(false)}
       >
-        <AddCustomer onClose={() => setOpenAddCustomer(false)}/>
+        <AddCustomer customer={customer} onClose={() => setOpenAddCustomer(false)}/>
       </Backdrop>
 
       <Grid item xs={12} md={8} lg={9}>
@@ -51,7 +72,10 @@ const Customers = () => {
             gap: 10
           }}>
             <Button size="small" variant="contained" color="success" endIcon={<BiPlusCircle/>}
-                    onClick={() => setOpenAddCustomer(true)}>Add Customer</Button>
+                    onClick={() => {
+                      setCustomer([]);
+                      setOpenAddCustomer(true);
+                    }}>Add Customer</Button>
           </div>
 
           <div className="SearchItem">
@@ -71,11 +95,11 @@ const Customers = () => {
         <Table sx={{minWidth: 650}} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{fontWeight: 'bold'}}>Dessert (100g serving)</TableCell>
-              <TableCell sx={{fontWeight: 'bold'}} align="right">Calories</TableCell>
-              <TableCell sx={{fontWeight: 'bold'}} align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell sx={{fontWeight: 'bold'}} align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell sx={{fontWeight: 'bold'}} align="right">Protein&nbsp;(g)</TableCell>
+              <TableCell sx={{fontWeight: 'bold'}}>Name</TableCell>
+              <TableCell sx={{fontWeight: 'bold'}} align="right">Telephone</TableCell>
+              <TableCell sx={{fontWeight: 'bold'}} align="right">Address</TableCell>
+              <TableCell sx={{fontWeight: 'bold'}} align="right">Gender</TableCell>
+              <TableCell sx={{fontWeight: 'bold'}} align="right">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
