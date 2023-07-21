@@ -24,7 +24,7 @@ const Customers = () => {
 
   const [rows, setRows] = useState([]);
 
-  useEffect( () => {
+  useEffect(() => {
     const getCustomers = async () => {
       const customers = await getAllUsers();
       const mappedRows = customers.data.map((customer) =>
