@@ -12,6 +12,7 @@ import {AiFillCloseCircle} from "react-icons/ai";
 import MuiAlert from "@mui/material/Alert";
 import {deleteUser, saveUser, updateUser} from "../../../../services/customer.js";
 import IconButton from "@mui/material/IconButton";
+import DialogPopup from "../../Dialog/Dialog";
 
 const AddCustomer = (props) => {
   const [name, setName] = useState("");
@@ -88,12 +89,6 @@ const AddCustomer = (props) => {
     setSnackbarOpen(true);
   };
 
-  const action = (
-    <IconButton size="small" aria-label="close" color="inherit" onClick={() => setSnackbarOpen(false)}>
-      <AiFillCloseCircle fontSize="small"/>
-    </IconButton>
-  );
-
   const onDeleteCustomer = async () => {
     try {
       await deleteUser(props.customer?._id);
@@ -112,31 +107,25 @@ const AddCustomer = (props) => {
         autoHideDuration={6000}
         anchorOrigin={{vertical: "top", horizontal: "center"}}
         onClose={() => setSnackbarOpen(false)}
-        action={action}
+        action={
+        <IconButton size="small" aria-label="close" color="inherit" onClick={() => setSnackbarOpen(false)}>
+          <AiFillCloseCircle fontSize="small"/>
+        </IconButton>
+      }
       >
         <Alert onClose={() => setSnackbarOpen(false)} severity={alertSeverity} sx={{width: "100%"}}>
           {message}
         </Alert>
       </Snackbar>
-      <Dialog
-        open={dialogOpen}
+      <DialogPopup
+        dialogOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Delete Customer"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this customer?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="error" onClick={onDeleteCustomer}>Yes, Delete</Button>
-          <Button variant="contained" color={"primary"} autoFocus onClick={() => setDialogOpen(false)}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
+        title={"Delete Customer"}
+        description={"Are you sure you want to delete this customer?"}
+        onClickLeftButton={onDeleteCustomer}
+        onClickRightButton={() => setDialogOpen(false)}
+        LeftButtonText={"Yes, delete"}
+      />
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={11}>
           <Typography align="center" color="black" variant="h6" gutterBottom>

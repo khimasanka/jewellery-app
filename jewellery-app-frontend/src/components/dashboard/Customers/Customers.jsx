@@ -92,11 +92,18 @@ const Customers = () => {
             display: 'flex',
             gap: 10
           }}>
-            <Button size="small" variant="contained" color="success" endIcon={<BiPlusCircle/>}
-                    onClick={() => {
-                      setCustomer([]);
-                      setOpenAddCustomer(true);
-                    }}>Add Customer</Button>
+            <Button
+              size="small"
+              variant="contained"
+              color="success"
+              endIcon={<BiPlusCircle/>}
+              onClick={() => {
+                setCustomer([]);
+                setOpenAddCustomer(true);
+              }}
+            >
+              Add Customer
+            </Button>
           </div>
 
           <div className="SearchItem">
