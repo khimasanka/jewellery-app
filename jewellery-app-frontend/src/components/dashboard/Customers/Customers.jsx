@@ -17,12 +17,34 @@ import {getAllUsers} from "../../../services/customer.js";
 const Customers = () => {
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
   const [customer, setCustomer] = useState([]);
+  const [search, setSearch] = useState("");
+  const [rows, setRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
 
-  const createData = (name, calories, fat, carbs, protein) => {
-    return {name, calories, fat, carbs, protein};
+  const createData = (name, telephone, address, gender, action) => {
+    return {name, telephone, address, gender, action};
   };
 
-  const [rows, setRows] = useState([]);
+  const filterRows = () => {
+    const filteredData = rows.filter((row) => {
+      const { name, address, telephone, gender } = row;
+      const searchText = search.toLowerCase();
+
+      const nameMatch = name && name.toLowerCase().includes(searchText);
+      const addressMatch = address && address.toLowerCase().includes(searchText);
+      const telephoneMatch = telephone && telephone.toLowerCase().includes(searchText);
+      const genderMatch = gender && gender.toLowerCase().includes(searchText);
+
+      return nameMatch || addressMatch || telephoneMatch || genderMatch;
+    });
+    setFilteredRows(filteredData);
+  };
+
+
+
+  useEffect(() => {
+    filterRows();
+  }, [search, rows]);
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -83,6 +105,8 @@ const Customers = () => {
               sx={{ml: 1, flex: 1}}
               placeholder="Search Customer"
               inputProps={{'aria-label': 'search items'}}
+              value={search}
+              onChange={event => setSearch(event.target.value)}
             />
             <IconButton type="button" sx={{p: '10px'}} aria-label="search">
               <BiSearch/>
@@ -103,18 +127,16 @@ const Customers = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {filteredRows.map((row) => (
               <TableRow
                 key={row.name}
                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
               >
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell component="th" scope="row">{row.name}</TableCell>
+                <TableCell align="right">{row.telephone}</TableCell>
+                <TableCell align="right">{row.address}</TableCell>
+                <TableCell align="right">{row.gender}</TableCell>
+                <TableCell align="right">{row.action}</TableCell>
               </TableRow>
             ))}
           </TableBody>
