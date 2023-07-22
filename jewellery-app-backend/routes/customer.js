@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 
   try {
     const responce = await customer.save();
-    res.json(responce)
+    res.json(responce);
   } catch (e) {
     console.log('error ' + e)
   }
