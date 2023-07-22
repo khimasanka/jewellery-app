@@ -27,7 +27,7 @@ const Customers = () => {
 
   const filterRows = () => {
     const filteredData = rows.filter((row) => {
-      const { name, address, telephone, gender } = row;
+      const {name, address, telephone, gender} = row;
       const searchText = search.toLowerCase();
 
       const nameMatch = name && name.toLowerCase().includes(searchText);
@@ -39,7 +39,6 @@ const Customers = () => {
     });
     setFilteredRows(filteredData);
   };
-
 
 
   useEffect(() => {

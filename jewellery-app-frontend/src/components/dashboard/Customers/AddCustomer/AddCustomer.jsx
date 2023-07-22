@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { MenuItem, Snackbar } from "@mui/material";
-import { GrClose } from "react-icons/gr";
-import { FaDeleteLeft } from "react-icons/fa6";
-import { AiFillCloseCircle } from "react-icons/ai";
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, Snackbar} from "@mui/material";
+import {GrClose} from "react-icons/gr";
+import {FaDeleteLeft} from "react-icons/fa6";
+import {AiFillCloseCircle} from "react-icons/ai";
 import MuiAlert from "@mui/material/Alert";
-import { saveUser, updateUser } from "../../../../services/customer.js";
+import {deleteUser, saveUser, updateUser} from "../../../../services/customer.js";
 import IconButton from "@mui/material/IconButton";
 
 const AddCustomer = (props) => {
@@ -20,10 +20,12 @@ const AddCustomer = (props) => {
   const [gender, setGender] = useState("Male");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState(false);
 
   useEffect(() => {
     if (props.customer) {
-      const { name, address, telephone, gender } = props.customer;
+      const {name, address, telephone, gender} = props.customer;
       setName(name || "");
       setAddress(address || "");
       setTelephone(telephone || "");
@@ -71,43 +73,70 @@ const AddCustomer = (props) => {
 
   const formIsValid = () => {
     if (name === "") {
-      showMessage("Customer name is required");
+      showMessage("Customer name is required", "warning");
       return false;
     } else if (address === "") {
-      showMessage("Address is required");
+      showMessage("Address is required", "warning");
       return false;
     }
     return true;
   };
 
-  const showMessage = (message) => {
+  const showMessage = (message, severity) => {
     setMessage(message);
+    setAlertSeverity(severity);
     setSnackbarOpen(true);
   };
 
-  const handleClose = () => {
-    setSnackbarOpen(false);
-  };
-
   const action = (
-    <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-      <AiFillCloseCircle fontSize="small" />
+    <IconButton size="small" aria-label="close" color="inherit" onClick={() => setSnackbarOpen(false)}>
+      <AiFillCloseCircle fontSize="small"/>
     </IconButton>
   );
+
+  const onDeleteCustomer = async () => {
+    try {
+      await deleteUser(props.customer?._id);
+      setDialogOpen(false);
+      props.onClose();
+    } catch (e) {
+      showMessage("Something went wrong", "warning");
+      console.log(e)
+    }
+  }
 
   return (
     <Box className="Container" width={720} m={1}>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        onClose={handleClose}
+        anchorOrigin={{vertical: "top", horizontal: "center"}}
+        onClose={() => setSnackbarOpen(false)}
         action={action}
       >
-        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity={alertSeverity} sx={{width: "100%"}}>
           {message}
         </Alert>
       </Snackbar>
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete Customer"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this customer?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="error" onClick={onDeleteCustomer}>Yes, Delete</Button>
+          <Button variant="contained" color={"primary"} autoFocus onClick={() => setDialogOpen(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={11}>
           <Typography align="center" color="black" variant="h6" gutterBottom>
@@ -115,10 +144,10 @@ const AddCustomer = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={1} textAlign="end" paddingRight={1}>
-          <GrClose color="black" onClick={props.onClose} cursor="pointer" />
+          <GrClose color="black" onClick={props.onClose} cursor="pointer"/>
         </Grid>
       </Grid>
-      <Container sx={{ mt: 2 }}>
+      <Container sx={{mt: 2}}>
         <Grid container spacing={2}>
           <Grid item lg={6} md={6} xs={12}>
             <TextField
@@ -174,7 +203,12 @@ const AddCustomer = (props) => {
                     Clear
                   </Button>
                 ) : (
-                  <Button color="error" variant="outlined" endIcon={<FaDeleteLeft />}>
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    endIcon={<FaDeleteLeft/>}
+                    onClick={() => setDialogOpen(true)}
+                  >
                     Delete
                   </Button>
                 )}
