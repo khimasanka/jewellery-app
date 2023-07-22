@@ -9,7 +9,10 @@ import TextField from "@mui/material/TextField";
 import React, {useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import {FaDeleteLeft} from "react-icons/fa6";
-import {saveItem, updateItem} from "../../../../services/item.js";
+import {deleteItem, saveItem, updateItem} from "../../../../services/item.js";
+import DialogPopup from "../../../Dialog/Dialog.jsx";
+import Toast from "../../../Toast/Toast.jsx";
+import validator from "validator";
 
 const AddItem = (props) => {
   const itemNames = [
@@ -48,6 +51,10 @@ const AddItem = (props) => {
   const [price, setPrice] = useState();
   const [description, setDescription] = useState('');
   const [quantity, setQuantity] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState(false);
 
   useEffect(() => {
     if (props.item) {
@@ -61,35 +68,103 @@ const AddItem = (props) => {
     }
   }, [props.item]);
 
-  const item ={
+  const item = {
     name: inputNameValue,
-    material:inputMaterialValue,
+    material: inputMaterialValue,
     description,
     weight,
     price,
     quantity
   }
 
+  const showMessage = (message, severity) => {
+    setMessage(message);
+    setAlertSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  const formIsValid = () => {
+    if (inputNameValue === "") {
+      showMessage("Item name is required", "warning");
+      return false;
+    } else if (inputMaterialValue === "") {
+      showMessage("Material is required", "warning");
+      return false;
+    } else if (weight === "") {
+      showMessage("Weight is required", "warning");
+      return false;
+    } else if (!validator.isFloat(weight)) {
+      showMessage("Weight must be a number", "warning");
+      return false;
+    } else if (price === "") {
+      showMessage("Price is required", "warning");
+      return false;
+    } else if (!validator.isFloat(price)) {
+      showMessage("Price must be a number", "warning");
+      return false;
+    } else if (description === "") {
+      showMessage("Description is required", "warning");
+      return false;
+    } else if (quantity === "") {
+      showMessage("Quantity is required", "warning");
+      return false;
+    }else if (!validator.isInt(quantity)) {
+      showMessage("Quantity must be a number", "warning");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   const onSaveItem = async () => {
-    try {
-      await saveItem(item);
-      props.onClose();
-    } catch (e) {
-      console.log(e)
+    if (formIsValid()) {
+      try {
+        await saveItem(item);
+        props.onClose();
+      } catch (e) {
+        console.log(e)
+      }
     }
   };
 
   const onUpdateItem = async () => {
+    if (formIsValid()) {
+      try {
+        await updateItem(props.item._id, item);
+        props.onClose();
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
+
+  const onDeleteItem = async () => {
     try {
-      await updateItem(props.item._id, item);
+      await deleteItem(props.item._id);
+      setDialogOpen(false);
       props.onClose();
-    }catch (e) {
+    } catch (e) {
       console.log(e)
     }
   }
 
   return (
     <Box className="Container" width={720} m={1}>
+      <Toast
+        open={snackbarOpen}
+        close={() => setSnackbarOpen(false)}
+        severity={alertSeverity}
+        message={message}
+      />
+      <DialogPopup
+        dialogOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        title={"Delete Item?"}
+        description={"Are you sure you want to delete this Item?"}
+        onClickLeftButton={onDeleteItem}
+        onClickRightButton={() => setDialogOpen(false)}
+        LeftButtonText={"Yes, delete"}
+      />
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={11}>
           <Typography align="center" color="black" variant="h6" gutterBottom>
@@ -145,7 +220,7 @@ const AddItem = (props) => {
                 ),
               }}
               value={weight}
-              onChange={e=>setWeight(e.target.value)}
+              onChange={e => setWeight(e.target.value)}
               fullWidth
             />
           </Grid>
@@ -161,7 +236,7 @@ const AddItem = (props) => {
                 ),
               }}
               value={price}
-              onChange={e=>setPrice(e.target.value)}
+              onChange={e => setPrice(e.target.value)}
               fullWidth
             />
           </Grid>
@@ -171,7 +246,7 @@ const AddItem = (props) => {
               fullWidth
               placeholder="Description"
               value={description}
-              onChange={e=>setDescription(e.target.value)}
+              onChange={e => setDescription(e.target.value)}
             />
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
@@ -181,7 +256,7 @@ const AddItem = (props) => {
               type="number"
               fullWidth
               value={quantity}
-              onChange={e=>setQuantity(e.target.value)}
+              onChange={e => setQuantity(e.target.value)}
             />
           </Grid>
 
@@ -195,7 +270,7 @@ const AddItem = (props) => {
                     color="error"
                     variant="outlined"
                     endIcon={<FaDeleteLeft/>}
-                    //onClick={() => setDialogOpen(true)}
+                    onClick={() => setDialogOpen(true)}
                   >
                     Delete
                   </Button>

@@ -5,14 +5,13 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, Snackbar} from "@mui/material";
+import {MenuItem} from "@mui/material";
 import {GrClose} from "react-icons/gr";
 import {FaDeleteLeft} from "react-icons/fa6";
-import {AiFillCloseCircle} from "react-icons/ai";
-import MuiAlert from "@mui/material/Alert";
 import {deleteUser, saveUser, updateUser} from "../../../../services/customer.js";
-import IconButton from "@mui/material/IconButton";
-import DialogPopup from "../../Dialog/Dialog";
+import DialogPopup from "../../../Dialog/Dialog";
+import Toast from "../../../Toast/Toast.jsx";
+import validator from "validator";
 
 const AddCustomer = (props) => {
   const [name, setName] = useState("");
@@ -68,16 +67,24 @@ const AddCustomer = (props) => {
     }
   };
 
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
   const formIsValid = () => {
     if (name === "") {
       showMessage("Customer name is required", "warning");
       return false;
+    }if (!validator.isAlpha(name.replace(/\s/g, ''))) {
+      showMessage("Name must contain only letters", "warning");
+      return false;
     } else if (address === "") {
       showMessage("Address is required", "warning");
+      return false;
+    }else if (telephone === "") {
+      showMessage("Telephone is required", "warning");
+      return false;
+    }if (!validator.isMobilePhone(telephone, 'any', { strictMode: false })) {
+      showMessage("Invalid telephone number", "warning");
+      return false;
+    }else if (gender === "") {
+      showMessage("Gender is required", "warning");
       return false;
     }
     return true;
@@ -102,21 +109,12 @@ const AddCustomer = (props) => {
 
   return (
     <Box className="Container" width={720} m={1}>
-      <Snackbar
+      <Toast
         open={snackbarOpen}
-        autoHideDuration={6000}
-        anchorOrigin={{vertical: "top", horizontal: "center"}}
-        onClose={() => setSnackbarOpen(false)}
-        action={
-        <IconButton size="small" aria-label="close" color="inherit" onClick={() => setSnackbarOpen(false)}>
-          <AiFillCloseCircle fontSize="small"/>
-        </IconButton>
-      }
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity={alertSeverity} sx={{width: "100%"}}>
-          {message}
-        </Alert>
-      </Snackbar>
+        close={() => setSnackbarOpen(false)}
+        severity={alertSeverity}
+        message={message}
+      />
       <DialogPopup
         dialogOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
