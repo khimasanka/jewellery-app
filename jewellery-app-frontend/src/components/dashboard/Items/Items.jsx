@@ -17,13 +17,33 @@ import {getAllItems} from "../../../services/item.js";
 
 const Items = () => {
   const [openAddItem, setOpenAddItem] = useState(false);
-  const [rows, setRows] = useState([]);
   const [item, setItem] = useState([]);
   const [search, setSearch] = useState("");
+  const [rows, setRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
 
   const createData = (name, material, description, weight, price, quantity, action) => {
     return {name, material, description, weight, price, quantity, action};
   };
+
+  const filterRows = () => {
+    const filteredData = rows.filter((row) => {
+      const {name, material, description} = row;
+      const searchTerm = search.toLowerCase();
+
+      const nameMatch = name && name.toLowerCase().includes(searchTerm);
+      const materialMatch = material && material.toLowerCase().includes(searchTerm);
+      const descriptionMatch = description && description.toLowerCase().includes(searchTerm);
+
+      return nameMatch || materialMatch || descriptionMatch;
+    });
+    setFilteredRows(filteredData);
+  }
+
+  useEffect(() => {
+    filterRows();
+  }, [search,rows]);
+
 
   useEffect(() => {
     const getItems = async () => {
@@ -118,7 +138,7 @@ const Items = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {filteredRows.map((row) => (
               <TableRow
                 key={row.name}
                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
